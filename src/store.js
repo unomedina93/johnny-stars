@@ -38,6 +38,48 @@ async function syncToGitHub(state) {
   }
 }
 
+// ─── Sync FROM GitHub (pull changes made on web dashboard) ───────────────────
+// Called on app start. If the remote data is newer than local, replace local.
+export async function syncFromGitHub(set, get) {
+  try {
+    const raw = localStorage.getItem('johnny-github-settings')
+    if (!raw) return
+
+    const { token, username, repo } = JSON.parse(raw)
+    if (!token || !username || !repo) return
+
+    if (!window.electronAPI) return
+
+    const isOnline = await window.electronAPI.checkOnline()
+    if (!isOnline) return
+
+    const result = await window.electronAPI.fetchFromGitHub({ token, username, repo })
+    if (!result.success || !result.data) return
+
+    const remote = result.data
+    const local = get()
+
+    // Only overwrite if remote is strictly newer
+    if (!remote.lastUpdated) return
+    const remoteTime = new Date(remote.lastUpdated).getTime()
+    const localTime = local.history[0]
+      ? new Date(local.history[0].date).getTime()
+      : 0
+
+    if (remoteTime > localTime) {
+      set({
+        balance: remote.balance ?? local.balance,
+        todayStickers: remote.todayStickers ?? local.todayStickers,
+        stickerGoalMet: remote.stickerGoalMet ?? local.stickerGoalMet,
+        bag: remote.bag ?? local.bag,
+        history: remote.history ?? local.history,
+      })
+    }
+  } catch (err) {
+    console.warn('Sync from GitHub skipped:', err.message)
+  }
+}
+
 // ─── Store ────────────────────────────────────────────────────────────────────
 const useStore = create(
   persist(

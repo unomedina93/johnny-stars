@@ -4,274 +4,480 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Johnny's Star Chart 🌟</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Nunito', sans-serif;
-      background: linear-gradient(160deg, #0d1b4b 0%, #1a237e 40%, #1565c0 100%);
+      background: linear-gradient(160deg, #0d1b4b 0%, #1a237e 50%, #1565c0 100%);
       min-height: 100vh;
       color: white;
-      padding: 20px 16px 40px;
     }
 
-    h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 2rem;
-      color: #ffd740;
-      text-align: center;
-      margin-bottom: 4px;
-      text-shadow: 0 0 20px rgba(255,215,64,0.5);
-    }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px 16px 60px; }
 
-    .subtitle {
-      text-align: center;
-      color: #90a4ae;
-      font-size: 0.8rem;
-      margin-bottom: 24px;
-    }
+    h1 { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: #ffd740; text-align: center; margin-bottom: 4px; text-shadow: 0 0 20px rgba(255,215,64,0.5); }
 
-    .card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(10px);
-    }
+    .subtitle { text-align: center; color: #90a4ae; font-size: 0.8rem; margin-bottom: 20px; }
 
-    .balance-card {
-      text-align: center;
-      padding: 32px 20px;
-      animation: glow 3s ease-in-out infinite;
-    }
+    .card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; margin-bottom: 14px; }
 
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(255,215,64,0.2); }
-      50%       { box-shadow: 0 0 40px rgba(255,215,64,0.5); }
-    }
+    .balance-card { text-align: center; padding: 28px 20px; animation: glow 3s ease-in-out infinite; }
+    @keyframes glow { 0%,100% { box-shadow: 0 0 20px rgba(255,215,64,0.2); } 50% { box-shadow: 0 0 40px rgba(255,215,64,0.5); } }
+    .balance-number { font-family: 'Fredoka One', cursive; font-size: 4.5rem; color: #ffd740; line-height: 1; text-shadow: 0 0 30px rgba(255,215,64,0.6); }
+    .balance-label { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: #90a4ae; margin-top: 4px; letter-spacing: 2px; }
 
-    .balance-number {
-      font-family: 'Fredoka One', cursive;
-      font-size: 5rem;
-      color: #ffd740;
-      line-height: 1;
-      text-shadow: 0 0 30px rgba(255,215,64,0.6);
-    }
+    /* Tabs */
+    .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+    .tab { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #90a4ae; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; cursor: pointer; transition: all 0.15s; }
+    .tab.active { background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3); }
 
-    .balance-label {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.2rem;
-      color: #90a4ae;
-      margin-top: 6px;
-      letter-spacing: 2px;
-    }
+    /* Section titles */
+    .section-title { font-family: 'Fredoka One', cursive; font-size: 1rem; color: #ffd740; margin-bottom: 12px; }
 
-    .section-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      color: #ffd740;
-      margin-bottom: 14px;
-    }
+    /* Stickers */
+    .stickers { display: flex; gap: 10px; justify-content: center; font-size: 2rem; }
+    .sticker-count { text-align: center; color: #90a4ae; font-size: 0.8rem; margin-top: 6px; }
 
-    /* Sticker row */
-    .stickers {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      font-size: 2.2rem;
+    /* Action buttons grid */
+    .action-grid { display: flex; flex-direction: column; gap: 8px; }
+    .action-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.07); color: white;
+      font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+      text-align: left; cursor: pointer; transition: background 0.15s, transform 0.1s; width: 100%;
     }
+    .action-btn:active { transform: scale(0.97); }
+    .action-btn:hover { background: rgba(255,255,255,0.12); }
+    .pts { margin-left: auto; font-weight: 900; padding: 2px 10px; border-radius: 50px; white-space: nowrap; font-size: 0.85rem; }
+    .pts-pos { background: rgba(102,187,106,0.25); color: #81c784; }
+    .pts-neg { background: rgba(239,83,80,0.25); color: #ef9a9a; }
 
-    .sticker-count {
-      text-align: center;
-      color: #90a4ae;
-      font-size: 0.85rem;
-      margin-top: 8px;
-    }
+    /* Accordion */
+    .accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 0.9rem; margin-bottom: 6px; transition: background 0.15s; }
+    .accordion-header:hover { background: rgba(255,255,255,0.1); }
+    .accordion-body { display: none; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .accordion-body.open { display: flex; }
+    .arrow { transition: transform 0.2s; display: inline-block; }
+    .arrow.open { transform: rotate(180deg); }
 
-    /* History items */
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      font-size: 0.9rem;
-    }
+    /* History */
+    .history-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.85rem; }
     .history-item:last-child { border-bottom: none; }
-    .history-emoji { font-size: 1.4rem; width: 32px; text-align: center; }
-    .history-label { flex: 1; font-weight: 700; }
-    .history-date  { font-size: 0.72rem; color: #90a4ae; }
-    .history-pts   { font-weight: 900; white-space: nowrap; }
+    .h-emoji { font-size: 1.2rem; width: 28px; text-align: center; }
+    .h-label { flex: 1; font-weight: 700; }
+    .h-date { font-size: 0.7rem; color: #90a4ae; }
+    .h-pts { font-weight: 900; white-space: nowrap; font-size: 0.85rem; }
 
     /* Bag items */
-    .bag-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 14px;
-      margin-bottom: 8px;
-    }
-    .bag-emoji { font-size: 2.5rem; }
-    .bag-name  { font-family: 'Fredoka One', cursive; font-size: 1rem; }
-    .bag-date  { font-size: 0.72rem; color: #90a4ae; }
+    .bag-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; }
+    .bag-emoji { font-size: 2rem; }
+    .bag-name { font-family: 'Fredoka One', cursive; font-size: 0.95rem; }
+    .bag-date { font-size: 0.7rem; color: #90a4ae; }
 
-    .refresh-btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border-radius: 50px;
-      border: none;
-      background: #42a5f5;
-      color: white;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(66,165,245,0.4);
-    }
+    /* Buttons */
+    .btn { display: block; width: 100%; padding: 13px; border-radius: 50px; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: transform 0.1s, opacity 0.1s; }
+    .btn:active { transform: scale(0.97); }
+    .btn-blue { background: #42a5f5; color: white; box-shadow: 0 4px 16px rgba(66,165,245,0.4); }
+    .btn-ghost { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+    .btn-yellow { background: #ffd740; color: #1a237e; box-shadow: 0 4px 16px rgba(255,215,64,0.4); }
 
-    .empty-state {
-      text-align: center;
-      color: #90a4ae;
-      padding: 16px 0;
-      font-size: 0.9rem;
-    }
+    /* Settings panel */
+    .settings-section { margin-bottom: 14px; }
+    .settings-input { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); color: white; font-family: 'Nunito', sans-serif; font-size: 0.9rem; outline: none; margin-bottom: 8px; }
+    .settings-input::placeholder { color: #607d8b; }
 
-    .last-updated {
-      text-align: center;
-      color: #90a4ae;
-      font-size: 0.75rem;
-      margin-top: 8px;
-    }
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(20,40,100,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; padding: 11px 24px; font-weight: 700; font-size: 0.9rem; z-index: 999; white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.4); pointer-events: none; transition: opacity 0.3s; }
+    .toast.hidden { opacity: 0; }
+
+    /* Setup banner */
+    .setup-banner { background: rgba(255,112,67,0.15); border: 1px solid rgba(255,112,67,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; font-size: 0.85rem; color: #ffab91; text-align: center; }
+
+    .empty-state { text-align: center; color: #90a4ae; padding: 14px 0; font-size: 0.85rem; }
+
+    #refreshBtn { margin-bottom: 14px; }
   </style>
 </head>
 <body>
-
+<div class="container">
   <h1>🌟 Johnny's Stars 🌟</h1>
   <div class="subtitle" id="lastUpdated">Loading...</div>
 
-  <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
-
-  <!-- Balance -->
+  <!-- Balance always visible -->
   <div class="card balance-card">
     <div class="balance-number" id="balance">—</div>
     <div class="balance-label">⭐ STARS ⭐</div>
   </div>
 
-  <!-- Stickers -->
+  <!-- Stickers always visible -->
   <div class="card">
     <div class="section-title">⭐ Today's Stickers</div>
-    <div class="stickers" id="stickers">—</div>
+    <div class="stickers" id="stickers">☆ ☆ ☆ ☆ ☆</div>
     <div class="sticker-count" id="stickerCount"></div>
   </div>
 
-  <!-- Bag -->
-  <div class="card">
-    <div class="section-title">🎒 Johnny's Bag</div>
-    <div id="bagItems"></div>
+  <!-- Setup banner shown when token not configured -->
+  <div class="setup-banner" id="setupBanner" style="display:none">
+    ⚙️ Enter your GitHub settings in the <strong>Settings</strong> tab to add stars from here.
   </div>
 
-  <!-- Recent Activity -->
-  <div class="card">
-    <div class="section-title">📋 Recent Activity</div>
-    <div id="historyItems"></div>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('view')">📊 View</button>
+    <button class="tab" onclick="switchTab('parent')">⭐ Add Stars</button>
+    <button class="tab" onclick="switchTab('settings')">⚙️ Settings</button>
   </div>
 
-  <script>
-    const STICKER_GOAL = 5
+  <!-- VIEW TAB -->
+  <div id="tab-view">
+    <button class="btn btn-blue" id="refreshBtn" onclick="loadData()">🔄 Refresh</button>
 
-    function timeAgo(iso) {
-      const diff = (Date.now() - new Date(iso).getTime()) / 1000
-      if (diff < 60) return 'just now'
-      if (diff < 3600) return `${Math.floor(diff/60)}m ago`
-      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
-      return `${Math.floor(diff/86400)}d ago`
+    <div class="card">
+      <div class="section-title">🎒 Johnny's Bag</div>
+      <div id="bagItems"><div class="empty-state">Loading...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📋 Recent Activity</div>
+      <div id="historyItems"><div class="empty-state">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- PARENT TAB -->
+  <div id="tab-parent" style="display:none">
+
+    <!-- Sticker add button -->
+    <div class="card">
+      <div class="section-title">⭐ School Sticker</div>
+      <button class="action-btn" onclick="addPoints(5, 'School Sticker ⭐', '⭐')">
+        <span>⭐</span>
+        <span>Add a Sticker</span>
+        <span class="pts pts-pos">+5 ⭐</span>
+      </button>
+      <div style="margin-top:8px">
+        <button class="action-btn" onclick="addPoints(15, 'All Stickers Bonus! 🎉', '🎉')">
+          <span>🎉</span>
+          <span>All Stickers Bonus!</span>
+          <span class="pts pts-pos">+15 ⭐</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chores accordion -->
+    <div class="card" style="padding: 8px 14px">
+      <div class="accordion-header" onclick="toggleAccordion('chores')">
+        🧹 Chores <span class="arrow" id="arrow-chores">▾</span>
+      </div>
+      <div class="accordion-body" id="body-chores">
+        <button class="action-btn" onclick="addPoints(5,  'Brushing Teeth',    '🦷')"><span>🦷</span><span>Brushing Teeth</span>   <span class="pts pts-pos">+5 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(8,  'Picking Up Laundry','👕')"><span>👕</span><span>Picking Up Laundry</span><span class="pts pts-pos">+8 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(15, 'Cleaning Playroom', '🧸')"><span>🧸</span><span>Cleaning Playroom</span><span class="pts pts-pos">+15 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(8,  'Setting the Table',  '🍽️')"><span>🍽️</span><span>Setting the Table</span><span class="pts pts-pos">+8 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(10, 'Feeding Pepper 🐕',  '🐾')"><span>🐾</span><span>Feeding Pepper 🐕</span><span class="pts pts-pos">+10 ⭐</span></button>
+      </div>
+    </div>
+
+    <!-- Good Behavior accordion -->
+    <div class="card" style="padding: 8px 14px">
+      <div class="accordion-header" onclick="toggleAccordion('behavior')">
+        😇 Good Behavior <span class="arrow" id="arrow-behavior">▾</span>
+      </div>
+      <div class="accordion-body" id="body-behavior">
+        <button class="action-btn" onclick="addPoints(10, 'Listening to Parents','👂')"><span>👂</span><span>Listening to Parents</span><span class="pts pts-pos">+10 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(10, 'Ate All His Food',    '🥗')"><span>🥗</span><span>Ate All His Food</span>   <span class="pts pts-pos">+10 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(10, 'Patience',            '⏳')"><span>⏳</span><span>Patience</span>            <span class="pts pts-pos">+10 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(5,  'Indoor Voices',       '🤫')"><span>🤫</span><span>Indoor Voices</span>       <span class="pts pts-pos">+5 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(10, 'Focusing on Tasks',   '🎯')"><span>🎯</span><span>Focusing on Tasks</span>  <span class="pts pts-pos">+10 ⭐</span></button>
+      </div>
+    </div>
+
+    <!-- Lessons accordion -->
+    <div class="card" style="padding: 8px 14px">
+      <div class="accordion-header" onclick="toggleAccordion('lessons')">
+        📚 Lessons <span class="arrow" id="arrow-lessons">▾</span>
+      </div>
+      <div class="accordion-body" id="body-lessons">
+        <button class="action-btn" onclick="addPoints(20, 'Lesson Learned',       '📚')"><span>📚</span><span>Lesson Learned</span>      <span class="pts pts-pos">+20 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(15, 'Tried Something New',  '💪')"><span>💪</span><span>Tried Something New</span><span class="pts pts-pos">+15 ⭐</span></button>
+      </div>
+    </div>
+
+    <!-- Deductions accordion (collapsed) -->
+    <div class="card" style="padding: 8px 14px">
+      <div class="accordion-header" onclick="toggleAccordion('deductions')">
+        ⚠️ Deductions <span class="arrow" id="arrow-deductions">▾</span>
+      </div>
+      <div class="accordion-body" id="body-deductions">
+        <div style="color:#90a4ae; font-size:0.75rem; padding: 2px 0 8px">Use sparingly. Johnny works hard! 💙</div>
+        <button class="action-btn" onclick="addPoints(-3, 'Not Listening',   '😤')"><span>😤</span><span>Not Listening</span>  <span class="pts pts-neg">-3 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(-2, 'Too Loud Inside', '📢')"><span>📢</span><span>Too Loud Inside</span><span class="pts pts-neg">-2 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(-3, 'Not Eating Food', '🙅')"><span>🙅</span><span>Not Eating Food</span><span class="pts pts-neg">-3 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(-5, 'Hitting',         '✋')"><span>✋</span><span>Hitting</span>        <span class="pts pts-neg">-5 ⭐</span></button>
+        <button class="action-btn" onclick="addPoints(-3, 'Tantrum',         '😭')"><span>😭</span><span>Tantrum</span>        <span class="pts pts-neg">-3 ⭐</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div id="tab-settings" style="display:none">
+    <div class="card">
+      <div class="section-title">⚙️ GitHub Settings</div>
+      <div style="color:#90a4ae; font-size:0.8rem; margin-bottom:14px">
+        Required to add stars from this page and sync with the Windows app.
+      </div>
+      <input class="settings-input" id="cfg-username" placeholder="GitHub username (e.g. unomedina93)" />
+      <input class="settings-input" id="cfg-repo"     placeholder="Repo name (e.g. johnny-stars)" />
+      <input class="settings-input" id="cfg-token"    placeholder="GitHub Personal Access Token" type="password" />
+      <div style="color:#90a4ae; font-size:0.75rem; margin-bottom:14px">
+        Token needs <strong>repo</strong> scope.
+        Get one at github.com/settings/tokens
+      </div>
+      <button class="btn btn-yellow" onclick="saveSettings()">Save Settings</button>
+      <div id="settingsSaved" style="color:#66bb6a; text-align:center; margin-top:10px; font-weight:700; display:none">✅ Saved!</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script>
+  const STICKER_GOAL = 5
+
+  // ── Config ──────────────────────────────────────────────────────────────────
+  function getCfg() {
+    const raw = localStorage.getItem('johnny-github-settings-web')
+    return raw ? JSON.parse(raw) : {}
+  }
+
+  function saveSettings() {
+    const cfg = {
+      username: document.getElementById('cfg-username').value.trim(),
+      repo:     document.getElementById('cfg-repo').value.trim(),
+      token:    document.getElementById('cfg-token').value.trim(),
     }
-
-    function fmtDate(iso) {
-      const d = new Date(iso)
-      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
-        ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-
-    async function loadData() {
-      document.getElementById('lastUpdated').textContent = 'Refreshing...'
-      try {
-        const res = await fetch('./data.json?t=' + Date.now())
-        if (!res.ok) throw new Error('No data yet')
-        const d = await res.json()
-
-        // Balance
-        document.getElementById('balance').textContent = d.balance ?? '0'
-
-        // Stickers
-        const count = d.todayStickers ?? 0
-        const starsHTML = Array.from({ length: STICKER_GOAL }, (_, i) =>
-          `<span>${i < count ? '⭐' : '☆'}</span>`
-        ).join('')
-        document.getElementById('stickers').innerHTML = starsHTML
-        document.getElementById('stickerCount').textContent =
-          d.stickerGoalMet
-            ? '🎉 Amazing! All stickers today!'
-            : `${count} / ${STICKER_GOAL} stickers today`
-
-        // Bag
-        const bagEl = document.getElementById('bagItems')
-        if (!d.bag || d.bag.length === 0) {
-          bagEl.innerHTML = '<div class="empty-state">Bag is empty! Go earn some stars ⭐</div>'
-        } else {
-          bagEl.innerHTML = d.bag.map(item => `
-            <div class="bag-item">
-              <div class="bag-emoji">${item.reward.emoji}</div>
-              <div>
-                <div class="bag-name">${item.reward.name}</div>
-                <div class="bag-date">Earned ${fmtDate(item.purchasedAt)}</div>
-              </div>
-            </div>
-          `).join('')
-        }
-
-        // History
-        const histEl = document.getElementById('historyItems')
-        if (!d.history || d.history.length === 0) {
-          histEl.innerHTML = '<div class="empty-state">No activity yet</div>'
-        } else {
-          histEl.innerHTML = d.history.slice(0, 15).map(item => `
-            <div class="history-item">
-              <div class="history-emoji">${item.emoji}</div>
-              <div style="flex:1">
-                <div class="history-label">${item.label}</div>
-                <div class="history-date">${fmtDate(item.date)}</div>
-              </div>
-              <div class="history-pts" style="color:${item.points > 0 ? '#81c784' : item.points < 0 ? '#ef9a9a' : '#90a4ae'}">
-                ${item.points > 0 ? '+' : ''}${item.points !== 0 ? item.points + ' ⭐' : '🎊'}
-              </div>
-            </div>
-          `).join('')
-        }
-
-        // Last updated
-        const ago = d.lastUpdated ? timeAgo(d.lastUpdated) : 'unknown'
-        document.getElementById('lastUpdated').textContent = `Last synced ${ago}`
-
-      } catch (err) {
-        document.getElementById('lastUpdated').textContent =
-          'Not synced yet — open the app to sync'
-        document.getElementById('balance').textContent = '?'
-      }
-    }
-
-    // Load on start
+    localStorage.setItem('johnny-github-settings-web', JSON.stringify(cfg))
+    document.getElementById('settingsSaved').style.display = 'block'
+    setTimeout(() => document.getElementById('settingsSaved').style.display = 'none', 2000)
+    checkSetup()
     loadData()
+  }
 
-    // Auto-refresh every 60 seconds
-    setInterval(loadData, 60000)
-  </script>
+  function checkSetup() {
+    const cfg = getCfg()
+    const ready = cfg.token && cfg.username && cfg.repo
+    document.getElementById('setupBanner').style.display = ready ? 'none' : 'block'
+    // Pre-fill settings form
+    if (cfg.username) document.getElementById('cfg-username').value = cfg.username
+    if (cfg.repo)     document.getElementById('cfg-repo').value     = cfg.repo
+    if (cfg.token)    document.getElementById('cfg-token').value     = cfg.token
+  }
+
+  // ── Tabs ────────────────────────────────────────────────────────────────────
+  function switchTab(tab) {
+    ['view','parent','settings'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none'
+    })
+    document.querySelectorAll('.tab').forEach((el, i) => {
+      el.classList.toggle('active', ['view','parent','settings'][i] === tab)
+    })
+  }
+
+  // ── Accordion ───────────────────────────────────────────────────────────────
+  function toggleAccordion(id) {
+    const body  = document.getElementById('body-' + id)
+    const arrow = document.getElementById('arrow-' + id)
+    const open  = body.classList.toggle('open')
+    arrow.classList.toggle('open', open)
+  }
+
+  // ── Toast ───────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast')
+    t.textContent = msg
+    t.classList.remove('hidden')
+    clearTimeout(window._toastTimer)
+    window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2500)
+  }
+
+  // ── Time formatting ─────────────────────────────────────────────────────────
+  function timeAgo(iso) {
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000
+    if (diff < 60)    return 'just now'
+    if (diff < 3600)  return `${Math.floor(diff/60)}m ago`
+    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
+    return `${Math.floor(diff/86400)}d ago`
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso)
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
+      ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  // ── GitHub API ──────────────────────────────────────────────────────────────
+  async function getFileFromGitHub() {
+    const { token, username, repo } = getCfg()
+    const res = await fetch(
+      `https://api.github.com/repos/${username}/${repo}/contents/docs/data.json`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    )
+    if (!res.ok) throw new Error(`GitHub fetch failed: ${res.status}`)
+    const file = await res.json()
+    const data = JSON.parse(atob(file.content.replace(/\n/g,'')))
+    return { data, sha: file.sha }
+  }
+
+  async function pushFileToGitHub(data, sha) {
+    const { token, username, repo } = getCfg()
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))))
+    const res = await fetch(
+      `https://api.github.com/repos/${username}/${repo}/contents/docs/data.json`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `⭐ Points added via web dashboard [${new Date().toLocaleString()}]`,
+          content,
+          sha,
+        }),
+      }
+    )
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.message || `Push failed: ${res.status}`)
+    }
+  }
+
+  // ── Add Points ──────────────────────────────────────────────────────────────
+  async function addPoints(pts, label, emoji) {
+    const cfg = getCfg()
+    if (!cfg.token || !cfg.username || !cfg.repo) {
+      showToast('⚙️ Set up GitHub settings first!')
+      switchTab('settings')
+      return
+    }
+
+    showToast('Saving...')
+
+    try {
+      let fileData, sha
+
+      try {
+        const result = await getFileFromGitHub()
+        fileData = result.data
+        sha = result.sha
+      } catch {
+        // data.json doesn't exist yet — start fresh
+        fileData = { balance: 0, todayStickers: 0, stickerGoalMet: false, bag: [], history: [], kidName: 'Johnny' }
+        sha = undefined
+      }
+
+      const newBalance = Math.max(0, (fileData.balance || 0) + pts)
+
+      const updated = {
+        ...fileData,
+        balance: newBalance,
+        lastUpdated: new Date().toISOString(),
+        history: [
+          { id: Date.now(), date: new Date().toISOString(), points: pts, label, emoji },
+          ...(fileData.history || []),
+        ].slice(0, 200),
+      }
+
+      await pushFileToGitHub(updated, sha)
+
+      // Update UI immediately
+      document.getElementById('balance').textContent = newBalance
+      renderHistory(updated.history)
+
+      const msg = pts > 0
+        ? `${emoji} +${pts} stars for ${label}! 🎉`
+        : `${emoji} ${pts} stars — ${label}`
+      showToast(msg)
+
+    } catch (err) {
+      console.error(err)
+      showToast('❌ Error: ' + err.message)
+    }
+  }
+
+  // ── Render helpers ──────────────────────────────────────────────────────────
+  function renderStickers(count, goalMet) {
+    const html = Array.from({ length: STICKER_GOAL }, (_, i) =>
+      `<span>${i < count ? '⭐' : '☆'}</span>`
+    ).join('')
+    document.getElementById('stickers').innerHTML = html
+    document.getElementById('stickerCount').textContent = goalMet
+      ? '🎉 Amazing! All stickers today!'
+      : `${count} / ${STICKER_GOAL} stickers today`
+  }
+
+  function renderBag(bag) {
+    const el = document.getElementById('bagItems')
+    if (!bag || bag.length === 0) {
+      el.innerHTML = '<div class="empty-state">Bag is empty! Go earn some stars ⭐</div>'
+      return
+    }
+    el.innerHTML = bag.map(item => `
+      <div class="bag-item">
+        <div class="bag-emoji">${item.reward.emoji}</div>
+        <div>
+          <div class="bag-name">${item.reward.name}</div>
+          <div class="bag-date">Earned ${fmtDate(item.purchasedAt)}</div>
+        </div>
+      </div>
+    `).join('')
+  }
+
+  function renderHistory(history) {
+    const el = document.getElementById('historyItems')
+    if (!history || history.length === 0) {
+      el.innerHTML = '<div class="empty-state">No activity yet</div>'
+      return
+    }
+    el.innerHTML = history.slice(0, 15).map(item => `
+      <div class="history-item">
+        <div class="h-emoji">${item.emoji}</div>
+        <div style="flex:1">
+          <div class="h-label">${item.label}</div>
+          <div class="h-date">${fmtDate(item.date)}</div>
+        </div>
+        <div class="h-pts" style="color:${item.points > 0 ? '#81c784' : item.points < 0 ? '#ef9a9a' : '#90a4ae'}">
+          ${item.points > 0 ? '+' : ''}${item.points !== 0 ? item.points + ' ⭐' : '🎊'}
+        </div>
+      </div>
+    `).join('')
+  }
+
+  // ── Load Data ────────────────────────────────────────────────────────────────
+  async function loadData() {
+    document.getElementById('lastUpdated').textContent = 'Refreshing...'
+    try {
+      const { data: d } = await getFileFromGitHub()
+
+      document.getElementById('balance').textContent = d.balance ?? '0'
+      renderStickers(d.todayStickers ?? 0, d.stickerGoalMet ?? false)
+      renderBag(d.bag)
+      renderHistory(d.history)
+
+      const ago = d.lastUpdated ? timeAgo(d.lastUpdated) : 'unknown'
+      document.getElementById('lastUpdated').textContent = `Last synced ${ago}`
+    } catch {
+      document.getElementById('lastUpdated').textContent = 'Not synced yet — open the app to sync'
+      document.getElementById('balance').textContent = '?'
+      document.getElementById('bagItems').innerHTML   = '<div class="empty-state">No data yet</div>'
+      document.getElementById('historyItems').innerHTML = '<div class="empty-state">No data yet</div>'
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  checkSetup()
+  loadData()
+  setInterval(loadData, 60000) // auto-refresh every minute
+</script>
 </body>
 </html>

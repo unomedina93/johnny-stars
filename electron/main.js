@@ -81,6 +81,25 @@ ipcMain.handle('push-to-github', async (event, { token, username, repo, data }) 
   }
 })
 
+// ─── Fetch from GitHub (pull web dashboard changes into the app) ────────────
+ipcMain.handle('fetch-from-github', async (event, { token, username, repo }) => {
+  try {
+    const { Octokit } = await import('@octokit/rest')
+    const octokit = new Octokit({ auth: token })
+
+    const { data: fileData } = await octokit.repos.getContent({
+      owner: username,
+      repo,
+      path: 'docs/data.json',
+    })
+
+    const content = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf8'))
+    return { success: true, data: content }
+  } catch (err) {
+    return { success: false, error: err.message }
+  }
+})
+
 // ─── Network Status Check ──────────────────────────────────────────────────
 ipcMain.handle('check-online', async () => {
   try {

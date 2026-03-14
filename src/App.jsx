@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import './App.css'
 import PinModal from './components/PinModal'
 import ParentMode from './components/ParentMode'
 import KidMode from './components/KidMode'
+import useStore, { syncFromGitHub } from './store'
 
 // Randomized starfield — memoized so stars don't move on re-render
 function Starfield() {
@@ -50,6 +51,12 @@ function Starfield() {
 export default function App() {
   const [mode, setMode] = useState('kid')   // 'kid' | 'parent'
   const [showPin, setShowPin] = useState(false)
+  const { setState } = useStore
+
+  // On startup, pull any changes made from the web dashboard
+  useEffect(() => {
+    syncFromGitHub(useStore.setState, useStore.getState)
+  }, [])
 
   const handleParentAccess = () => setShowPin(true)
 
