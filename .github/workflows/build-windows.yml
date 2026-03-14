@@ -1,0 +1,55 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload installer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JohnnysStarChart-Windows-Installer
+          path: release/*.exe
+          retention-days: 30
+
+      - name: Create/Update GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: "Johnny's Star Chart — Latest"
+          body: |
+            ## 🌟 Johnny's Star Chart
+
+            Download and run the installer below on Johnny's Windows laptop.
+
+            **Install steps:**
+            1. Download `Johnny's Star Chart Setup.exe`
+            2. Double-click to install
+            3. Open from the Desktop shortcut
+          artifacts: "release/*.exe"
+          allowUpdates: true
+          makeLatest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

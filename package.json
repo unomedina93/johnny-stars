@@ -1,0 +1,46 @@
+{
+  "name": "johnny-rewards",
+  "version": "1.0.0",
+  "description": "Johnny's Star Chart - A fun reward tracking app",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build && electron-builder",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.1.1",
+    "canvas-confetti": "^1.9.3",
+    "framer-motion": "^11.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^8.2.2",
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.4.1",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.johnny.rewards",
+    "productName": "Johnny's Star Chart",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    }
+  }
+}

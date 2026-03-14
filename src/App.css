@@ -1,0 +1,375 @@
+/* ─── Reset & Base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #1a237e;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Theme Variables ───────────────────────────────────────────────────────── */
+:root {
+  --bg:        #0d1b4b;
+  --surface:   #1a237e;
+  --card:      rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.15);
+  --primary:   #42a5f5;
+  --accent:    #ff7043;
+  --green:     #66bb6a;
+  --red:       #ef5350;
+  --yellow:    #ffd740;
+  --star:      #ffd740;
+  --text:      #ffffff;
+  --text-dim:  #90a4ae;
+  --radius:    20px;
+  --shadow:    0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ─── App Shell ─────────────────────────────────────────────────────────────── */
+.app {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(160deg, #0d1b4b 0%, #1a237e 40%, #1565c0 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Starfield Background ──────────────────────────────────────────────────── */
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+}
+
+/* ─── Scrollable Content ────────────────────────────────────────────────────── */
+.scroll-area {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding: 0 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.scroll-area::-webkit-scrollbar { width: 6px; }
+.scroll-area::-webkit-scrollbar-track { background: transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+/* ─── Glass Card ────────────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(12px);
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  transition: transform 0.1s, box-shadow 0.1s;
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.95); }
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 20px rgba(66,165,245,0.4);
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 4px 20px rgba(255,112,67,0.4);
+}
+
+.btn-green {
+  background: var(--green);
+  color: white;
+  box-shadow: 0 4px 20px rgba(102,187,106,0.4);
+}
+
+.btn-red {
+  background: var(--red);
+  color: white;
+  box-shadow: 0 4px 20px rgba(239,83,80,0.3);
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.btn-yellow {
+  background: var(--yellow);
+  color: #1a237e;
+  box-shadow: 0 4px 20px rgba(255,215,64,0.5);
+}
+
+/* ─── Section Title ─────────────────────────────────────────────────────────── */
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4rem;
+  color: var(--yellow);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Badge ─────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.badge-green  { background: var(--green);   color: white; }
+.badge-yellow { background: var(--yellow);  color: #1a237e; }
+.badge-red    { background: var(--red);     color: white; }
+.badge-blue   { background: var(--primary); color: white; }
+
+/* ─── Progress Bar ──────────────────────────────────────────────────────────── */
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.1);
+  border-radius: 50px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, var(--primary), var(--yellow));
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Action Row Button (Parent Mode) ───────────────────────────────────────── */
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  transition: background 0.15s, transform 0.1s;
+  width: 100%;
+}
+
+.action-btn:hover  { background: rgba(255,255,255,0.12); }
+.action-btn:active { transform: scale(0.97); }
+
+.action-btn .pts {
+  margin-left: auto;
+  font-size: 1rem;
+  font-weight: 900;
+  padding: 2px 10px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
+.pts-positive { background: rgba(102,187,106,0.25); color: #81c784; }
+.pts-negative { background: rgba(239,83,80,0.25);   color: #ef9a9a; }
+
+/* ─── History Item ──────────────────────────────────────────────────────────── */
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.9rem;
+}
+
+.history-item:last-child { border-bottom: none; }
+
+.history-emoji { font-size: 1.4rem; width: 32px; text-align: center; }
+
+.history-label { flex: 1; font-weight: 600; }
+
+.history-date  { font-size: 0.75rem; color: var(--text-dim); }
+
+.history-pts   { font-weight: 800; white-space: nowrap; }
+
+/* ─── PIN Modal ─────────────────────────────────────────────────────────────── */
+.pin-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.pin-box {
+  background: #1a237e;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 28px;
+  padding: 40px 32px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.pin-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.pin-subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pin-dot.filled {
+  background: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.pin-dot.error {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pin-key {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.1s, transform 0.1s;
+}
+
+.pin-key:hover  { background: rgba(255,255,255,0.15); }
+.pin-key:active { transform: scale(0.93); }
+
+/* ─── Confetti Canvas ───────────────────────────────────────────────────────── */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ─── Accordion (Parent Mode) ───────────────────────────────────────────────── */
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1rem;
+  transition: background 0.15s;
+  margin-bottom: 4px;
+}
+
+.accordion-header:hover { background: rgba(255,255,255,0.12); }
+
+.accordion-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+/* ─── Toast Notification ────────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,50,100,0.95);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 200;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}

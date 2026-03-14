@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Johnny's Star Chart 🌟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #0d1b4b 0%, #1a237e 40%, #1565c0 100%);
+      min-height: 100vh;
+      color: white;
+      padding: 20px 16px 40px;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: #ffd740;
+      text-align: center;
+      margin-bottom: 4px;
+      text-shadow: 0 0 20px rgba(255,215,64,0.5);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #90a4ae;
+      font-size: 0.8rem;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .balance-card {
+      text-align: center;
+      padding: 32px 20px;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,215,64,0.2); }
+      50%       { box-shadow: 0 0 40px rgba(255,215,64,0.5); }
+    }
+
+    .balance-number {
+      font-family: 'Fredoka One', cursive;
+      font-size: 5rem;
+      color: #ffd740;
+      line-height: 1;
+      text-shadow: 0 0 30px rgba(255,215,64,0.6);
+    }
+
+    .balance-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: #90a4ae;
+      margin-top: 6px;
+      letter-spacing: 2px;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: #ffd740;
+      margin-bottom: 14px;
+    }
+
+    /* Sticker row */
+    .stickers {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      font-size: 2.2rem;
+    }
+
+    .sticker-count {
+      text-align: center;
+      color: #90a4ae;
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    /* History items */
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.9rem;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-emoji { font-size: 1.4rem; width: 32px; text-align: center; }
+    .history-label { flex: 1; font-weight: 700; }
+    .history-date  { font-size: 0.72rem; color: #90a4ae; }
+    .history-pts   { font-weight: 900; white-space: nowrap; }
+
+    /* Bag items */
+    .bag-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      margin-bottom: 8px;
+    }
+    .bag-emoji { font-size: 2.5rem; }
+    .bag-name  { font-family: 'Fredoka One', cursive; font-size: 1rem; }
+    .bag-date  { font-size: 0.72rem; color: #90a4ae; }
+
+    .refresh-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border-radius: 50px;
+      border: none;
+      background: #42a5f5;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(66,165,245,0.4);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #90a4ae;
+      padding: 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .last-updated {
+      text-align: center;
+      color: #90a4ae;
+      font-size: 0.75rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌟 Johnny's Stars 🌟</h1>
+  <div class="subtitle" id="lastUpdated">Loading...</div>
+
+  <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+
+  <!-- Balance -->
+  <div class="card balance-card">
+    <div class="balance-number" id="balance">—</div>
+    <div class="balance-label">⭐ STARS ⭐</div>
+  </div>
+
+  <!-- Stickers -->
+  <div class="card">
+    <div class="section-title">⭐ Today's Stickers</div>
+    <div class="stickers" id="stickers">—</div>
+    <div class="sticker-count" id="stickerCount"></div>
+  </div>
+
+  <!-- Bag -->
+  <div class="card">
+    <div class="section-title">🎒 Johnny's Bag</div>
+    <div id="bagItems"></div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="card">
+    <div class="section-title">📋 Recent Activity</div>
+    <div id="historyItems"></div>
+  </div>
+
+  <script>
+    const STICKER_GOAL = 5
+
+    function timeAgo(iso) {
+      const diff = (Date.now() - new Date(iso).getTime()) / 1000
+      if (diff < 60) return 'just now'
+      if (diff < 3600) return `${Math.floor(diff/60)}m ago`
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
+      return `${Math.floor(diff/86400)}d ago`
+    }
+
+    function fmtDate(iso) {
+      const d = new Date(iso)
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
+        ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+
+    async function loadData() {
+      document.getElementById('lastUpdated').textContent = 'Refreshing...'
+      try {
+        const res = await fetch('./data.json?t=' + Date.now())
+        if (!res.ok) throw new Error('No data yet')
+        const d = await res.json()
+
+        // Balance
+        document.getElementById('balance').textContent = d.balance ?? '0'
+
+        // Stickers
+        const count = d.todayStickers ?? 0
+        const starsHTML = Array.from({ length: STICKER_GOAL }, (_, i) =>
+          `<span>${i < count ? '⭐' : '☆'}</span>`
+        ).join('')
+        document.getElementById('stickers').innerHTML = starsHTML
+        document.getElementById('stickerCount').textContent =
+          d.stickerGoalMet
+            ? '🎉 Amazing! All stickers today!'
+            : `${count} / ${STICKER_GOAL} stickers today`
+
+        // Bag
+        const bagEl = document.getElementById('bagItems')
+        if (!d.bag || d.bag.length === 0) {
+          bagEl.innerHTML = '<div class="empty-state">Bag is empty! Go earn some stars ⭐</div>'
+        } else {
+          bagEl.innerHTML = d.bag.map(item => `
+            <div class="bag-item">
+              <div class="bag-emoji">${item.reward.emoji}</div>
+              <div>
+                <div class="bag-name">${item.reward.name}</div>
+                <div class="bag-date">Earned ${fmtDate(item.purchasedAt)}</div>
+              </div>
+            </div>
+          `).join('')
+        }
+
+        // History
+        const histEl = document.getElementById('historyItems')
+        if (!d.history || d.history.length === 0) {
+          histEl.innerHTML = '<div class="empty-state">No activity yet</div>'
+        } else {
+          histEl.innerHTML = d.history.slice(0, 15).map(item => `
+            <div class="history-item">
+              <div class="history-emoji">${item.emoji}</div>
+              <div style="flex:1">
+                <div class="history-label">${item.label}</div>
+                <div class="history-date">${fmtDate(item.date)}</div>
+              </div>
+              <div class="history-pts" style="color:${item.points > 0 ? '#81c784' : item.points < 0 ? '#ef9a9a' : '#90a4ae'}">
+                ${item.points > 0 ? '+' : ''}${item.points !== 0 ? item.points + ' ⭐' : '🎊'}
+              </div>
+            </div>
+          `).join('')
+        }
+
+        // Last updated
+        const ago = d.lastUpdated ? timeAgo(d.lastUpdated) : 'unknown'
+        document.getElementById('lastUpdated').textContent = `Last synced ${ago}`
+
+      } catch (err) {
+        document.getElementById('lastUpdated').textContent =
+          'Not synced yet — open the app to sync'
+        document.getElementById('balance').textContent = '?'
+      }
+    }
+
+    // Load on start
+    loadData()
+
+    // Auto-refresh every 60 seconds
+    setInterval(loadData, 60000)
+  </script>
+</body>
+</html>
