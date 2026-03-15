@@ -1,0 +1,17 @@
+{
+  "balance": 5,
+  "todayStickers": 0,
+  "stickerGoalMet": false,
+  "bag": [],
+  "history": [
+    {
+      "id": 1773599834210,
+      "date": "2026-03-15T18:37:14.210Z",
+      "points": 5,
+      "label": "Brushing Teeth",
+      "emoji": "🦷"
+    }
+  ],
+  "kidName": "Johnny",
+  "lastUpdated": "2026-03-15T18:37:14.210Z"
+}
