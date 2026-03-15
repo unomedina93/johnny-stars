@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import confetti from 'canvas-confetti'
-import useStore from '../store'
+import useStore, { syncFromGitHub } from '../store'
 import StickerBoard from './StickerBoard'
 import {
   CHORES,
@@ -204,10 +204,19 @@ export default function ParentMode({ onExit }) {
   } = useStore()
 
   const [toast, setToast] = useState('')
+  const [syncing, setSyncing] = useState(false)
 
   const showToast = (msg) => {
     setToast(msg)
     setTimeout(() => setToast(''), 2200)
+  }
+
+  const handleSyncFromWeb = async () => {
+    setSyncing(true)
+    showToast('🔄 Syncing from web...')
+    await syncFromGitHub(useStore.setState, useStore.getState)
+    setSyncing(false)
+    showToast('✅ Synced from web dashboard!')
   }
 
   const handleAction = (item) => {
@@ -262,9 +271,19 @@ export default function ParentMode({ onExit }) {
             <strong style={{ color: '#ffd740', marginLeft: 6 }}>⭐ {balance}</strong>
           </div>
         </div>
-        <button className="btn btn-ghost" onClick={onExit}>
-          Exit ✕
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            className="btn btn-ghost"
+            style={{ padding: '10px 14px', fontSize: '0.85rem' }}
+            onClick={handleSyncFromWeb}
+            disabled={syncing}
+          >
+            {syncing ? '🔄' : '📱 Sync'}
+          </button>
+          <button className="btn btn-ghost" onClick={onExit}>
+            Exit ✕
+          </button>
+        </div>
       </div>
 
       {/* Content */}

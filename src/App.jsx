@@ -53,9 +53,12 @@ export default function App() {
   const [showPin, setShowPin] = useState(false)
   const { setState } = useStore
 
-  // On startup, pull any changes made from the web dashboard
+  // Sync from GitHub on startup and every 2 minutes while the app is open
   useEffect(() => {
-    syncFromGitHub(useStore.setState, useStore.getState)
+    const run = () => syncFromGitHub(useStore.setState, useStore.getState)
+    run()
+    const interval = setInterval(run, 2 * 60 * 1000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleParentAccess = () => setShowPin(true)
